@@ -8,7 +8,6 @@ def update_display(value):
 # Function to calculate the result
 def calculate():
     try:
-        # Replace custom symbols with Python operators
         expression = display.get().replace("÷", "/").replace("×", "*")
         result = eval(expression)
         display.set(result)
@@ -22,32 +21,33 @@ def clear_display():
 # Create the main window
 root = tk.Tk()
 root.title("Simple Calculator")
+root.configure(bg="#f0f0f0")  # Light gray background
 
 # Entry widget to display the result
 display = tk.StringVar()
-entry = tk.Entry(root, textvariable=display, font=("Helvetica", 24), justify="right")
+entry = tk.Entry(root, textvariable=display, font=("Helvetica", 24), justify="right", bg="#ffffff", fg="#000000")
 entry.grid(row=0, column=0, columnspan=4, sticky="nsew")
 
 # Button layout
 buttons = [
-    "C", "±", "%", "÷",
-    "7", "8", "9", "×",
-    "4", "5", "6", "-",
-    "1", "2", "3", "+",
-    "0", ".", "="
+    ("C", "#f44336"), ("±", "#FF9800"), ("%", "#FFC107"), ("÷", "#4CAF50"),
+    ("7", "#2196F3"), ("8", "#2196F3"), ("9", "#2196F3"), ("×", "#4CAF50"),
+    ("4", "#2196F3"), ("5", "#2196F3"), ("6", "#2196F3"), ("-", "#4CAF50"),
+    ("1", "#2196F3"), ("2", "#2196F3"), ("3", "#2196F3"), ("+", "#4CAF50"),
+    ("0", "#2196F3"), (".", "#2196F3"), ("=", "#4CAF50")
 ]
 
 # Create buttons and add them to the grid
-for i, button in enumerate(buttons):
-    if button == "=":
+for i, (text, color) in enumerate(buttons):
+    if text == "=":
         cmd = calculate
-    elif button == "C":
+    elif text == "C":
         cmd = clear_display
     else:
-        cmd = lambda value=button: update_display(value)
+        cmd = lambda value=text: update_display(value)
 
-    btn = tk.Button(root, text=button, command=cmd, font=("Helvetica", 16))
-    btn.grid(row=(i // 4) + 1, column=i % 4, sticky="nsew")
+    btn = tk.Button(root, text=text, command=cmd, font=("Helvetica", 16), bg=color, fg="white")
+    btn.grid(row=(i // 4) + 1, column=i % 4, sticky="nsew", padx=5, pady=5)
 
 # Configure row and column weights
 for i in range(5):
