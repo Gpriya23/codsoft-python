@@ -1,40 +1,62 @@
-# Python program for simple calculator
-def add(num1, num2):
-    return num1 + num2
-def subtract(num1, num2):
-    return num1 - num2
-def multiply(num1, num2):
-    return num1 * num2
-def divide(num1, num2):
-    return num1 / num2
+import tkinter as tk
 
-print("Please select operation -\n" \
-        "1. Add\n" \
-        "2. Subtract\n" \
-        "3. Multiply\n" \
-        "4. Divide\n")
+# Function to update the display
+def update_display(value):
+    current_text = display.get()
+    display.set(current_text + value)
 
+# Function to calculate the result
+def calculate():
+    try:
+        # Replace custom symbols with Python operators
+        expression = display.get().replace("÷", "/").replace("×", "*")
+        result = eval(expression)
+        display.set(result)
+    except Exception:
+        display.set("Error")
 
-# Take input from the user
-select = int(input("Select operations form 1, 2, 3, 4 :"))
+# Function to clear the display
+def clear_display():
+    display.set("")
 
-number_1 = int(input("Enter first number: "))
-number_2 = int(input("Enter second number: "))
+# Create the main window
+root = tk.Tk()
+root.title("Simple Calculator")
 
-if select == 1:
-    print(number_1, "+", number_2, "=",
-                    add(number_1, number_2))
+# Entry widget to display the result
+display = tk.StringVar()
+entry = tk.Entry(root, textvariable=display, font=("Helvetica", 24), justify="right")
+entry.grid(row=0, column=0, columnspan=4, sticky="nsew")
 
-elif select == 2:
-    print(number_1, "-", number_2, "=",
-                    subtract(number_1, number_2))
+# Button layout
+buttons = [
+    "C", "±", "%", "÷",
+    "7", "8", "9", "×",
+    "4", "5", "6", "-",
+    "1", "2", "3", "+",
+    "0", ".", "="
+]
 
-elif select == 3:
-    print(number_1, "*", number_2, "=",
-                    multiply(number_1, number_2))
+# Create buttons and add them to the grid
+for i, button in enumerate(buttons):
+    if button == "=":
+        cmd = calculate
+    elif button == "C":
+        cmd = clear_display
+    else:
+        cmd = lambda value=button: update_display(value)
 
-elif select == 4:
-    print(number_1, "/", number_2, "=",
-                    divide(number_1, number_2))
-else:
-    print("Invalid input")
+    btn = tk.Button(root, text=button, command=cmd, font=("Helvetica", 16))
+    btn.grid(row=(i // 4) + 1, column=i % 4, sticky="nsew")
+
+# Configure row and column weights
+for i in range(5):
+    root.grid_rowconfigure(i, weight=1)
+for i in range(4):
+    root.grid_columnconfigure(i, weight=1)
+
+# Set the window size
+root.geometry("400x600")
+
+# Run the main loop
+root.mainloop()
