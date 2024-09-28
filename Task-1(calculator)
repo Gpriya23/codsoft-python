@@ -1,34 +1,33 @@
 import tkinter as tk
 
-# Function to update the display
 def update_display(value):
     current_text = display.get()
     display.set(current_text + value)
 
-# Function to calculate the result
 def calculate():
     try:
         expression = display.get().replace("÷", "/").replace("×", "*")
         result = eval(expression)
-        display.set(result)
+        display.set(str(result))
     except Exception:
         display.set("Error")
 
-# Function to clear the display
 def clear_display():
     display.set("")
 
-# Create the main window
 root = tk.Tk()
 root.title("Simple Calculator")
-root.configure(bg="#f0f0f0")  # Light gray background
+root.configure(bg="#f0f0f0")
 
-# Entry widget to display the result
 display = tk.StringVar()
-entry = tk.Entry(root, textvariable=display, font=("Helvetica", 24), justify="right", bg="#ffffff", fg="#000000")
+display.set("")
+
+entry = tk.Entry(
+    root, textvariable=display, font=("Helvetica", 24),
+    justify="right", bg="#ffffff", fg="#000000", bd=10
+)
 entry.grid(row=0, column=0, columnspan=4, sticky="nsew")
 
-# Button layout
 buttons = [
     ("C", "#f44336"), ("±", "#FF9800"), ("%", "#FFC107"), ("÷", "#4CAF50"),
     ("7", "#2196F3"), ("8", "#2196F3"), ("9", "#2196F3"), ("×", "#4CAF50"),
@@ -37,7 +36,6 @@ buttons = [
     ("0", "#2196F3"), (".", "#2196F3"), ("=", "#4CAF50")
 ]
 
-# Create buttons and add them to the grid
 for i, (text, color) in enumerate(buttons):
     if text == "=":
         cmd = calculate
@@ -46,17 +44,16 @@ for i, (text, color) in enumerate(buttons):
     else:
         cmd = lambda value=text: update_display(value)
 
-    btn = tk.Button(root, text=text, command=cmd, font=("Helvetica", 16), bg=color, fg="white")
+    btn = tk.Button(
+        root, text=text, command=cmd, font=("Helvetica", 16),
+        bg=color, fg="white", bd=5
+    )
     btn.grid(row=(i // 4) + 1, column=i % 4, sticky="nsew", padx=5, pady=5)
 
-# Configure row and column weights
 for i in range(5):
     root.grid_rowconfigure(i, weight=1)
 for i in range(4):
     root.grid_columnconfigure(i, weight=1)
 
-# Set the window size
 root.geometry("400x600")
-
-# Run the main loop
 root.mainloop()
